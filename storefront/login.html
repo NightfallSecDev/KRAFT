@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KRAFT // Secure Login</title>
+  <meta name="description" content="Access the secure KRAFT workspace agent terminal.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body style="background-color: var(--platinum); display: flex; flex-direction: column; min-height: 100vh;">
+
+  <!-- Global Header Nav -->
+  <header class="global-header" id="globalHeader" style="position: absolute; top: 0; left: 0; right: 0;">
+    <div class="container header-container">
+      <div class="logo-container">
+        <a href="index.html">
+          <span>KRAFT</span><span class="logo-dot"></span>
+        </a>
+      </div>
+      
+      <nav class="desktop-nav">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Catalog</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="../admin/dashboard.html">Admin Terminal</a>
+      </nav>
+      
+      <div class="header-actions">
+        <button class="action-btn cart-btn" aria-label="Open Cart" id="cartBtn" onclick="openCartDrawer()" style="opacity:0.3; pointer-events:none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Login Container -->
+  <main style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 6rem 1rem 3rem 1rem; box-sizing: border-box;">
+    <div class="checkout-form-container" style="max-width: 440px; margin: 0 auto; box-shadow: 0 10px 40px rgba(142,142,147,0.1); border: 1px solid var(--border-color); background-color: var(--white);">
+      <div class="technical-spec" style="color: var(--accent); margin-bottom: 0.5rem; text-align: center;">AUTHENTICATION ROUTINE</div>
+      <h1 class="success-title" style="font-size: 1.8rem; margin-bottom: 1.5rem; text-align: center;">Agent Login</h1>
+      
+      <!-- Alert Message -->
+      <div id="loginErrorAlert" class="status-badge" style="display: none; background-color: #ffefee; border: 1px solid #ff3b30; color: #ff3b30; width: 100%; text-align: center; padding: 0.5rem; margin-bottom: 1rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.8rem;">
+        Credentials not authorized.
+      </div>
+
+      <form id="loginForm" onsubmit="processLogin(event)">
+        <div class="form-grid" style="grid-template-columns: 1fr;">
+          <div class="form-group">
+            <label for="loginEmail" class="form-label">Email Node Index</label>
+            <input type="email" id="loginEmail" class="form-input" required placeholder="agent@kraft.com">
+          </div>
+          <div class="form-group">
+            <label for="loginPassword" class="form-label">Security Passkey</label>
+            <input type="password" id="loginPassword" class="form-input" required placeholder="••••••••">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" style="width: 100%; margin-top: 1.5rem; font-size: 0.95rem;">
+          Verify Integrity & Log In
+        </button>
+      </form>
+
+      <div style="margin-top: 1.5rem; text-align: center; font-size: 0.85rem; color: var(--blue-grey);">
+        No active profile cataloged? <a href="signup.html" style="color: var(--accent); text-decoration: none; font-weight: bold;">Enroll Agent Profile</a>
+      </div>
+
+      <div style="margin-top: 2rem; padding: 0.75rem; background-color: var(--platinum); border-radius: 4px; font-size: 0.75rem; border: 1px solid var(--border-color); font-family: var(--font-mono); line-height: 1.4;">
+        <span style="color: var(--accent); font-weight: bold;">TEST CREDENTIALS:</span><br>
+        Email: agent@kraft.com<br>
+        Key: password123
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="global-footer" style="padding: 1.5rem 0; margin-top: auto; border-top: 1px solid var(--border-color);">
+    <div class="container" style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--blue-grey); flex-wrap: wrap; gap: 1rem;">
+      <span>© 2026 KRAFT LABS INC.</span>
+      <span>BUILD: v1.0.4-FC</span>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    function processLogin(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('loginEmail').value.trim();
+      const pass = document.getElementById('loginPassword').value;
+      const errorAlert = document.getElementById('loginErrorAlert');
+
+      // Seeding baseline credentials if not set
+      let users = JSON.parse(localStorage.getItem('kraft_users')) || [];
+      if (users.length === 0) {
+        users = [{
+          name: "Agent Smith",
+          email: "agent@kraft.com",
+          password: "password123"
+        }];
+        localStorage.setItem('kraft_users', JSON.stringify(users));
+      }
+
+      // Check credentials
+      const user = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === pass);
+
+      if (user) {
+        // Authenticated
+        sessionStorage.setItem('kraft_active_user', JSON.stringify({
+          name: user.name,
+          email: user.email
+        }));
+        
+        // Redirect to homepage
+        window.location.href = 'index.html';
+      } else {
+        // Failed
+        errorAlert.style.display = 'block';
+        setTimeout(() => {
+          errorAlert.style.display = 'none';
+        }, 5000);
+      }
+    }
+  </script>
+</body>
+</html>

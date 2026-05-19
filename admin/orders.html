@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KRAFT // Order Log Terminal</title>
+  <meta name="description" content="Manage order logs and tracking status for KRAFT.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="admin-body">
+
+  <div class="admin-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="logo-container">
+        <a href="../storefront/index.html" style="color: var(--white);">
+          <span>KRAFT</span><span class="logo-dot"></span>
+          <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--blue-grey); display: block; letter-spacing: 0.1em; margin-top: 2px;">ADMIN PANEL</span>
+        </a>
+      </div>
+      
+      <nav class="admin-nav">
+        <a href="dashboard.html" class="admin-nav-item">
+          <span>📊</span> Dashboard
+        </a>
+        <a href="products.html" class="admin-nav-item">
+          <span>📦</span> Products
+        </a>
+        <a href="orders.html" class="admin-nav-item active">
+          <span>🧾</span> Orders
+        </a>
+        <a href="../storefront/index.html" class="admin-nav-item" style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+          <span>←</span> Front Office
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="admin-main">
+      <header class="admin-header">
+        <div>
+          <h1 class="admin-title">Transaction Log Terminal</h1>
+          <p style="color: var(--blue-grey); font-family: var(--font-mono); font-size: 0.8rem;">MANAGE DISPATCH STAGES AND ROUTING TELEMETRY</p>
+        </div>
+      </header>
+
+      <!-- Filtering Segment -->
+      <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+        <button class="btn btn-outline" id="filter-all" onclick="filterOrders('all')" style="padding: 0.5rem 1rem; font-size: 0.85rem; background-color: var(--dark); color: var(--white);">
+          All Logs
+        </button>
+        <button class="btn btn-outline" id="filter-pending" onclick="filterOrders('pending')" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+          Pending
+        </button>
+        <button class="btn btn-outline" id="filter-shipped" onclick="filterOrders('shipped')" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+          Shipped
+        </button>
+        <button class="btn btn-outline" id="filter-delivered" onclick="filterOrders('delivered')" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+          Delivered
+        </button>
+      </div>
+
+      <!-- Orders Table -->
+      <section class="admin-section">
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Order Ref</th>
+                <th>Timestamp</th>
+                <th>Agent Credentials</th>
+                <th>Dispatch Destination</th>
+                <th>Manifest Details</th>
+                <th>Authorized Value</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let currentFilter = 'all';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Guarantee order database exists
+      if (!localStorage.getItem('kraft_orders')) {
+        // Simple redirect back to dashboard to trigger seeding
+        window.location.href = 'dashboard.html';
+        return;
+      }
+      renderOrdersTable();
+    });
+
+    function renderOrdersTable() {
+      const body = document.getElementById('ordersTableBody');
+      if (!body) return;
+
+      let orders = JSON.parse(localStorage.getItem('kraft_orders')) || [];
+      
+      // Apply status filter
+      if (currentFilter !== 'all') {
+        orders = orders.filter(o => o.status === currentFilter);
+      }
+
+      body.innerHTML = '';
+      if (orders.length === 0) {
+        body.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--blue-grey); padding: 3rem;">No order logs found for status: ${currentFilter.toUpperCase()}</td></tr>`;
+        return;
+      }
+
+      orders.forEach(o => {
+        const dateStr = new Date(o.date).toLocaleString('en-IN', {
+          day: 'numeric',
+          month: 'short',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+
+        const itemsHtml = o.items.map(item => `
+          <div style="font-size: 0.85rem; line-height: 1.2; margin-bottom: 0.25rem;">
+            <strong>${item.name}</strong> <span style="font-family: var(--font-mono); color: var(--blue-grey);">x${item.quantity}</span>
+          </div>
+        `).join('');
+
+        let badgeClass = 'status-pending';
+        let actionBtnHtml = '';
+
+        if (o.status === 'pending') {
+          badgeClass = 'status-pending';
+          actionBtnHtml = `<button class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; width: 100%;" onclick="progressOrder('${o.id}', 'shipped')">Ship Order</button>`;
+        } else if (o.status === 'shipped') {
+          badgeClass = 'status-shipped';
+          actionBtnHtml = `<button class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; width: 100%; background-color: #007aff; border-color: #007aff;" onclick="progressOrder('${o.id}', 'delivered')">Deliver Order</button>`;
+        } else if (o.status === 'delivered') {
+          badgeClass = 'status-delivered';
+          actionBtnHtml = `<button class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; width: 100%; opacity: 0.6;" onclick="progressOrder('${o.id}', 'archive')">Archive Log</button>`;
+        }
+
+        body.innerHTML += `
+          <tr>
+            <td style="font-family: var(--font-mono); font-weight: 700; color: var(--accent);">${o.id}</td>
+            <td style="font-size: 0.85rem;">${dateStr}</td>
+            <td>
+              <div style="font-weight: 600;">${o.customer.name}</div>
+              <div style="font-size: 0.75rem; color: var(--blue-grey); font-family: var(--font-mono);">${o.customer.email}</div>
+              <div style="font-size: 0.75rem; color: var(--blue-grey);">${o.customer.phone}</div>
+            </td>
+            <td style="font-size: 0.85rem; max-width: 180px; word-wrap: break-word;">${o.customer.address}</td>
+            <td>${itemsHtml}</td>
+            <td style="font-family: var(--font-mono); font-weight: 700; font-size: 0.95rem;">${formatCurrency(o.total)}</td>
+            <td><span class="status-badge ${badgeClass}">${o.status}</span></td>
+            <td>${actionBtnHtml}</td>
+          </tr>
+        `;
+      });
+    }
+
+    function filterOrders(status) {
+      currentFilter = status;
+      
+      // Update button highlights
+      const btns = ['all', 'pending', 'shipped', 'delivered'];
+      btns.forEach(b => {
+        const el = document.getElementById(`filter-${b}`);
+        if (el) {
+          if (b === status) {
+            el.style.backgroundColor = 'var(--dark)';
+            el.style.color = 'var(--white)';
+          } else {
+            el.style.backgroundColor = 'transparent';
+            el.style.color = 'var(--dark)';
+          }
+        }
+      });
+
+      renderOrdersTable();
+    }
+
+    function progressOrder(id, nextStatus) {
+      let orders = JSON.parse(localStorage.getItem('kraft_orders')) || [];
+      const idx = orders.findIndex(o => o.id === id);
+      
+      if (idx > -1) {
+        if (nextStatus === 'archive') {
+          if (confirm("Archive this order? It will be cleared from telemetry tables.")) {
+            orders.splice(idx, 1);
+            alert("Order log archived.");
+          } else {
+            return;
+          }
+        } else {
+          orders[idx].status = nextStatus;
+          alert(`Order [${id}] advanced to status: ${nextStatus.toUpperCase()}`);
+        }
+        localStorage.setItem('kraft_orders', JSON.stringify(orders));
+        renderOrdersTable();
+      }
+    }
+  </script>
+</body>
+</html>

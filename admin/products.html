@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KRAFT // Inventory Manager</title>
+  <meta name="description" content="Product inventory and catalog manager for KRAFT.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="admin-body">
+
+  <div class="admin-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="logo-container">
+        <a href="../storefront/index.html" style="color: var(--white);">
+          <span>KRAFT</span><span class="logo-dot"></span>
+          <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--blue-grey); display: block; letter-spacing: 0.1em; margin-top: 2px;">ADMIN PANEL</span>
+        </a>
+      </div>
+      
+      <nav class="admin-nav">
+        <a href="dashboard.html" class="admin-nav-item">
+          <span>📊</span> Dashboard
+        </a>
+        <a href="products.html" class="admin-nav-item active">
+          <span>📦</span> Products
+        </a>
+        <a href="orders.html" class="admin-nav-item">
+          <span>🧾</span> Orders
+        </a>
+        <a href="../storefront/index.html" class="admin-nav-item" style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+          <span>←</span> Front Office
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="admin-main">
+      <header class="admin-header">
+        <div>
+          <h1 class="admin-title">Device Catalog</h1>
+          <p style="color: var(--blue-grey); font-family: var(--font-mono); font-size: 0.8rem;">MANAGE DISPATCH INVENTORY AND MOCK STOCK METRICS</p>
+        </div>
+        <button class="btn btn-primary" onclick="openProductModal()">
+          + Enroll New Device Node
+        </button>
+      </header>
+
+      <!-- Inventory Table -->
+      <section class="admin-section">
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Device ID</th>
+                <th>Thumbnail</th>
+                <th>Designation Name</th>
+                <th>Category</th>
+                <th>Unit Value</th>
+                <th>Mock Stock</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal overlay for Adding a Product -->
+  <div class="modal-overlay" id="productModal" onclick="closeProductModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeProductModal()">✕</button>
+      <h2 class="checkout-step-title" style="margin-bottom: 1.5rem;">Enroll New Hardware Node</h2>
+      
+      <form id="newProductForm" onsubmit="saveNewProduct(event)">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="prodId" class="form-label">Unique Code ID</label>
+            <input type="text" id="prodId" class="form-input" placeholder="e.g. desk-shelf" required pattern="[a-z0-9\-]+" title="Lowercase letters, numbers, and dashes only">
+          </div>
+          <div class="form-group">
+            <label for="prodName" class="form-label">Designation Name</label>
+            <input type="text" id="prodName" class="form-input" placeholder="e.g. Minimal Desk Shelf" required>
+          </div>
+          <div class="form-group">
+            <label for="prodCategory" class="form-label">Category</label>
+            <select id="prodCategory" class="form-input" style="padding: 0.75rem;" required>
+              <option value="Power">Power (GaN)</option>
+              <option value="Smart Home">Smart Home</option>
+              <option value="Desk Accessories">Desk Accessories</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="prodPrice" class="form-label">Unit Value (₹)</label>
+            <input type="number" id="prodPrice" class="form-input" placeholder="5999" required min="100">
+          </div>
+          <div class="form-group">
+            <label for="prodOriginalPrice" class="form-label">Original Value (₹)</label>
+            <input type="number" id="prodOriginalPrice" class="form-input" placeholder="7999" required min="100">
+          </div>
+          <div class="form-group">
+            <label for="prodTag" class="form-label">Batch Tag</label>
+            <input type="text" id="prodTag" class="form-input" placeholder="e.g. New Batch" required>
+          </div>
+          
+          <div class="form-group col-span-2">
+            <label for="prodDesc" class="form-label">Brief Description</label>
+            <input type="text" id="prodDesc" class="form-input" placeholder="A single sentence describing the device features." required>
+          </div>
+
+          <div class="form-group col-span-2">
+            <label for="prodLongDesc" class="form-label">Detailed Description</label>
+            <textarea id="prodLongDesc" class="form-input" style="height: 80px; resize: vertical;" placeholder="Provide deep structural, layout, and manufacturing details of the device..." required></textarea>
+          </div>
+
+          <!-- Quick Specs Key-Values -->
+          <div class="form-group">
+            <label for="specKey1" class="form-label">Spec Key 1</label>
+            <input type="text" id="specKey1" class="form-input" placeholder="e.g. Material" value="Material">
+          </div>
+          <div class="form-group">
+            <label for="specVal1" class="form-label">Spec Value 1</label>
+            <input type="text" id="specVal1" class="form-input" placeholder="e.g. Machined Aluminum" value="Anodized Aluminum">
+          </div>
+          <div class="form-group">
+            <label for="specKey2" class="form-label">Spec Key 2</label>
+            <input type="text" id="specKey2" class="form-input" placeholder="e.g. Weight" value="Weight">
+          </div>
+          <div class="form-group">
+            <label for="specVal2" class="form-label">Spec Value 2</label>
+            <input type="text" id="specVal2" class="form-input" placeholder="e.g. 500g" value="650g">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">
+          Deploy Device to Storage
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderProductsTable();
+    });
+
+    function getCombinedProducts() {
+      const custom = JSON.parse(localStorage.getItem('kraft_custom_products')) || [];
+      return [...PRODUCTS, ...custom];
+    }
+
+    function renderProductsTable() {
+      const body = document.getElementById('productsTableBody');
+      if (!body) return;
+
+      const fullCatalog = getCombinedProducts();
+      body.innerHTML = '';
+
+      fullCatalog.forEach(p => {
+        const isCustom = !PRODUCTS.some(orig => orig.id === p.id);
+        const mockStock = p.id.length * 3 + 2; 
+
+        body.innerHTML += `
+          <tr>
+            <td style="font-family: var(--font-mono); font-size: 0.85rem;">${p.id}</td>
+            <td>
+              <img src="${p.image}" alt="${p.name}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border-color);">
+            </td>
+            <td style="font-weight: 600; text-transform: uppercase;">${p.name}</td>
+            <td style="color: var(--blue-grey); font-size: 0.9rem;">${p.category}</td>
+            <td style="font-family: var(--font-mono); font-weight: 700;">${formatCurrency(p.price)}</td>
+            <td style="font-family: var(--font-mono);">${mockStock} units</td>
+            <td>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" onclick="editProductPrice('${p.id}')">Edit Price</button>
+                ${isCustom ? `
+                  <button class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; background-color: #ff3b30; border-color: #ff3b30;" onclick="deleteCustomProduct('${p.id}')">Recall</button>
+                ` : `
+                  <button class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; opacity: 0.5;" disabled title="Baseline nodes cannot be recalled">Recall</button>
+                `}
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function openProductModal() {
+      document.getElementById('productModal').classList.add('active');
+    }
+
+    function closeProductModal() {
+      document.getElementById('productModal').classList.remove('active');
+      document.getElementById('newProductForm').reset();
+    }
+
+    function saveNewProduct(e) {
+      e.preventDefault();
+
+      const id = document.getElementById('prodId').value;
+      const name = document.getElementById('prodName').value;
+      const category = document.getElementById('prodCategory').value;
+      const price = parseFloat(document.getElementById('prodPrice').value);
+      const originalPrice = parseFloat(document.getElementById('prodOriginalPrice').value);
+      const tag = document.getElementById('prodTag').value;
+      const description = document.getElementById('prodDesc').value;
+      const detailedDescription = document.getElementById('prodLongDesc').value;
+
+      const specK1 = document.getElementById('specKey1').value;
+      const specV1 = document.getElementById('specVal1').value;
+      const specK2 = document.getElementById('specKey2').value;
+      const specV2 = document.getElementById('specVal2').value;
+
+      // Check if product code already exists
+      const catalog = getCombinedProducts();
+      if (catalog.some(p => p.id === id)) {
+        alert("This unique code ID is already registered to a device node.");
+        return;
+      }
+
+      // Build specs object
+      const specs = {};
+      if (specK1 && specV1) specs[specK1] = specV1;
+      if (specK2 && specV2) specs[specK2] = specV2;
+
+      // New product configuration
+      const newDevice = {
+        id: id,
+        name: name,
+        category: category,
+        price: price,
+        originalPrice: originalPrice,
+        image: "../images/hero_bg.png", // default placeholder to hero
+        description: description,
+        detailedDescription: detailedDescription,
+        specs: specs,
+        tag: tag,
+        rating: 5.0,
+        reviewsCount: 1
+      };
+
+      // Save custom product
+      const custom = JSON.parse(localStorage.getItem('kraft_custom_products')) || [];
+      custom.push(newDevice);
+      localStorage.setItem('kraft_custom_products', JSON.stringify(custom));
+
+      closeProductModal();
+      renderProductsTable();
+      alert("Hardware Node successfully compiled and deployed to system databases.");
+    }
+
+    function deleteCustomProduct(id) {
+      if (confirm(`Recall Custom Hardware Node [${id}] from system catalogs?`)) {
+        let custom = JSON.parse(localStorage.getItem('kraft_custom_products')) || [];
+        custom = custom.filter(p => p.id !== id);
+        localStorage.setItem('kraft_custom_products', JSON.stringify(custom));
+        renderProductsTable();
+      }
+    }
+
+    function editProductPrice(id) {
+      const catalog = getCombinedProducts();
+      const device = catalog.find(p => p.id === id);
+      if (!device) return;
+
+      const newPrice = prompt(`Enter new unit value (₹) for ${device.name}:`, device.price);
+      if (newPrice !== null && !isNaN(parseFloat(newPrice)) && parseFloat(newPrice) > 0) {
+        const isCustom = !PRODUCTS.some(orig => orig.id === id);
+
+        if (isCustom) {
+          let custom = JSON.parse(localStorage.getItem('kraft_custom_products')) || [];
+          const idx = custom.findIndex(p => p.id === id);
+          if (idx > -1) {
+            custom[idx].price = parseFloat(newPrice);
+            localStorage.setItem('kraft_custom_products', JSON.stringify(custom));
+          }
+        } else {
+          // If editing a baseline product, store it as an override or alert user
+          // For simple simulation, let's keep a baseline price override table in localStorage
+          let overrides = JSON.parse(localStorage.getItem('kraft_price_overrides')) || {};
+          overrides[id] = parseFloat(newPrice);
+          localStorage.setItem('kraft_price_overrides', JSON.stringify(overrides));
+        }
+        
+        renderProductsTable();
+        alert("Pricing parameters modified successfully.");
+      }
+    }
+  </script>
+</body>
+</html>

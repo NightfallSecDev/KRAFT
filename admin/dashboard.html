@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KRAFT // Admin Control Terminal</title>
+  <meta name="description" content="Operational dashboard for KRAFT inventory and logistics.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="admin-body">
+
+  <div class="admin-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="logo-container">
+        <a href="../storefront/index.html" style="color: var(--white);">
+          <span>KRAFT</span><span class="logo-dot"></span>
+          <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--blue-grey); display: block; letter-spacing: 0.1em; margin-top: 2px;">ADMIN PANEL</span>
+        </a>
+      </div>
+      
+      <nav class="admin-nav">
+        <a href="dashboard.html" class="admin-nav-item active">
+          <span>📊</span> Dashboard
+        </a>
+        <a href="products.html" class="admin-nav-item">
+          <span>📦</span> Products
+        </a>
+        <a href="orders.html" class="admin-nav-item">
+          <span>🧾</span> Orders
+        </a>
+        <a href="../storefront/index.html" class="admin-nav-item" style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+          <span>←</span> Front Office
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="admin-main">
+      <header class="admin-header">
+        <div>
+          <h1 class="admin-title">Operational Telemetry</h1>
+          <p style="color: var(--blue-grey); font-family: var(--font-mono); font-size: 0.8rem;">HOST: LOCALHOST // NODE STABLE</p>
+        </div>
+        <button class="btn btn-outline" onclick="resetTelemetryData()" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+          Reset Data Log
+        </button>
+      </header>
+
+      <!-- Stats Grid -->
+      <div class="admin-stats-grid">
+        <div class="stat-card accented">
+          <span class="stat-label">Sales Volume</span>
+          <span class="stat-value" id="totalSalesVal">₹0</span>
+          <span class="stat-trend trend-up">▲ 14.8% <span style="color: var(--blue-grey); font-weight: normal;">vs last week</span></span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Total Transactions</span>
+          <span class="stat-value" id="totalOrdersVal">0</span>
+          <span class="stat-trend trend-up">▲ 8.3% <span style="color: var(--blue-grey); font-weight: normal;">vs last week</span></span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Average Order Value</span>
+          <span class="stat-value" id="aovVal">₹0</span>
+          <span class="stat-trend trend-down">▼ 2.1% <span style="color: var(--blue-grey); font-weight: normal;">vs last week</span></span>
+        </div>
+      </div>
+
+      <!-- Recent Orders Section -->
+      <section class="admin-section">
+        <div class="admin-section-header">
+          <h2 class="admin-section-title">Recent Workstation Purchases</h2>
+          <a href="orders.html" class="btn btn-outline" style="padding: 0.25rem 0.75rem; font-size: 0.8rem;">All Logged Orders</a>
+        </div>
+        
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Order Ref</th>
+                <th>Timestamp</th>
+                <th>Agent</th>
+                <th>Items Procured</th>
+                <th>Total Value</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="recentOrdersTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Active Catalog Overview -->
+      <section class="admin-section">
+        <div class="admin-section-header">
+          <h2 class="admin-section-title">Enrolled Device Inventory</h2>
+          <a href="products.html" class="btn btn-outline" style="padding: 0.25rem 0.75rem; font-size: 0.8rem;">Add / Manage Inventory</a>
+        </div>
+        
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Device ID</th>
+                <th>Designation</th>
+                <th>Category</th>
+                <th>Unit Value</th>
+                <th>Mock Stock Level</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="deviceInventoryTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    // Seeding default database orders if empty
+    function seedDefaultOrders() {
+      const orders = JSON.parse(localStorage.getItem('kraft_orders'));
+      if (!orders || orders.length === 0) {
+        const seedData = [
+          {
+            id: "KT-743120",
+            date: new Date(Date.now() - 3600000 * 4).toISOString(), // 4 hrs ago
+            customer: {
+              name: "Devansh Mehta",
+              email: "devansh@domain.in",
+              phone: "+91 98765 43210",
+              address: "Flat 4B, Skyview Apts, Bandra, Mumbai - 400050"
+            },
+            items: [
+              { id: "grid-charger", name: "Grid-01 GaN Charger", price: 6499, quantity: 1 }
+            ],
+            subtotal: 6499,
+            total: 6499,
+            status: "pending"
+          },
+          {
+            id: "KT-312984",
+            date: new Date(Date.now() - 3600000 * 28).toISOString(), // 28 hrs ago
+            customer: {
+              name: "Priya Sharma",
+              email: "priya@gmail.com",
+              phone: "+91 99988 77766",
+              address: "12, Green Glen Layout, Bellandur, Bangalore - 560103"
+            },
+            items: [
+              { id: "aether-lamp", name: "Aether Circadian Lamp", price: 4999, quantity: 1 },
+              { id: "orbit-organizer", name: "Orbit Desk Organizer", price: 3899, quantity: 1 }
+            ],
+            subtotal: 8898,
+            total: 8898,
+            status: "shipped"
+          },
+          {
+            id: "KT-901234",
+            date: new Date(Date.now() - 3600000 * 72).toISOString(), // 3 days ago
+            customer: {
+              name: "Rohan Das",
+              email: "rohan@yahoo.com",
+              phone: "+91 88877 66655",
+              address: "Sector 15, Block C-45, Noida - 201301"
+            },
+            items: [
+              { id: "isotope-clock", name: "Isotope VFD Desktop Clock", price: 8999, quantity: 1 }
+            ],
+            subtotal: 8999,
+            total: 8999,
+            status: "delivered"
+          }
+        ];
+        localStorage.setItem('kraft_orders', JSON.stringify(seedData));
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      seedDefaultOrders();
+      renderDashboardStats();
+    });
+
+    function renderDashboardStats() {
+      const orders = JSON.parse(localStorage.getItem('kraft_orders')) || [];
+      
+      // Calculate Stats
+      let totalSales = 0;
+      orders.forEach(o => {
+        totalSales += o.total;
+      });
+      const orderCount = orders.length;
+      const aov = orderCount > 0 ? (totalSales / orderCount) : 0;
+
+      // Update counters
+      document.getElementById('totalSalesVal').textContent = formatCurrency(totalSales);
+      document.getElementById('totalOrdersVal').textContent = orderCount;
+      document.getElementById('aovVal').textContent = formatCurrency(aov);
+
+      // Render Recent Orders (max 5)
+      const recentBody = document.getElementById('recentOrdersTableBody');
+      if (recentBody) {
+        recentBody.innerHTML = '';
+        if (orders.length === 0) {
+          recentBody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--blue-grey);">No orders logged.</td></tr>';
+        } else {
+          orders.slice(0, 5).forEach(o => {
+            const dateStr = new Date(o.date).toLocaleDateString('en-IN', {
+              day: 'numeric',
+              month: 'short',
+              hour: '2-digit',
+              minute: '2-digit'
+            });
+            const itemsSummary = o.items.map(item => `${item.name} (x${item.quantity})`).join(', ');
+            
+            let badgeClass = 'status-pending';
+            if (o.status === 'shipped') badgeClass = 'status-shipped';
+            if (o.status === 'delivered') badgeClass = 'status-delivered';
+
+            recentBody.innerHTML += `
+              <tr>
+                <td style="font-family: var(--font-mono); font-weight: 700; color: var(--accent);">${o.id}</td>
+                <td>${dateStr}</td>
+                <td style="font-weight: 600;">${o.customer.name}</td>
+                <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${itemsSummary}</td>
+                <td style="font-family: var(--font-mono); font-weight: 700;">${formatCurrency(o.total)}</td>
+                <td><span class="status-badge ${badgeClass}">${o.status}</span></td>
+              </tr>
+            `;
+          });
+        }
+      }
+
+      // Render Active Catalog Overview
+      const inventoryBody = document.getElementById('deviceInventoryTableBody');
+      if (inventoryBody) {
+        inventoryBody.innerHTML = '';
+        
+        // Fetch custom products from local storage if user added new ones, otherwise use hardcoded
+        const customProducts = JSON.parse(localStorage.getItem('kraft_custom_products')) || [];
+        const fullCatalog = [...PRODUCTS, ...customProducts];
+
+        fullCatalog.forEach(p => {
+          // Mock stock numbers based on id length
+          const mockStock = p.id.length * 3 + 2; 
+          inventoryBody.innerHTML += `
+            <tr>
+              <td style="font-family: var(--font-mono);">${p.id}</td>
+              <td style="font-weight: 600; text-transform: uppercase;">${p.name}</td>
+              <td style="color: var(--blue-grey);">${p.category}</td>
+              <td style="font-family: var(--font-mono); font-weight: 700;">${formatCurrency(p.price)}</td>
+              <td style="font-family: var(--font-mono);">${mockStock} units</td>
+              <td><span class="status-badge status-delivered">Active Node</span></td>
+            </tr>
+          `;
+        });
+      }
+    }
+
+    function resetTelemetryData() {
+      if (confirm("Reset order telemetry database and reload baseline logs?")) {
+        localStorage.removeItem('kraft_orders');
+        localStorage.removeItem('kraft_custom_products');
+        seedDefaultOrders();
+        renderDashboardStats();
+      }
+    }
+  </script>
+</body>
+</html>

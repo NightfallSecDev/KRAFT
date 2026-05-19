@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KRAFT // Profile Enrollment</title>
+  <meta name="description" content="Register as an authorized KRAFT workstation operator.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body style="background-color: var(--platinum); display: flex; flex-direction: column; min-height: 100vh;">
+
+  <!-- Global Header Nav -->
+  <header class="global-header" id="globalHeader" style="position: absolute; top: 0; left: 0; right: 0;">
+    <div class="container header-container">
+      <div class="logo-container">
+        <a href="index.html">
+          <span>KRAFT</span><span class="logo-dot"></span>
+        </a>
+      </div>
+      
+      <nav class="desktop-nav">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Catalog</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="../admin/dashboard.html">Admin Terminal</a>
+      </nav>
+      
+      <div class="header-actions">
+        <button class="action-btn cart-btn" aria-label="Open Cart" id="cartBtn" onclick="openCartDrawer()" style="opacity:0.3; pointer-events:none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Signup Container -->
+  <main style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 6rem 1rem 3rem 1rem; box-sizing: border-box;">
+    <div class="checkout-form-container" style="max-width: 440px; margin: 0 auto; box-shadow: 0 10px 40px rgba(142,142,147,0.1); border: 1px solid var(--border-color); background-color: var(--white);">
+      <div class="technical-spec" style="color: var(--accent); margin-bottom: 0.5rem; text-align: center;">ENROLLMENT PROCEDURE</div>
+      <h1 class="success-title" style="font-size: 1.8rem; margin-bottom: 1.5rem; text-align: center;">Enroll Profile</h1>
+      
+      <!-- Alert Message -->
+      <div id="signupErrorAlert" class="status-badge" style="display: none; background-color: #ffefee; border: 1px solid #ff3b30; color: #ff3b30; width: 100%; text-align: center; padding: 0.5rem; margin-bottom: 1rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.8rem;">
+        ValidationError: Message placeholder.
+      </div>
+
+      <form id="signupForm" onsubmit="processSignup(event)">
+        <div class="form-grid" style="grid-template-columns: 1fr;">
+          <div class="form-group">
+            <label for="signupName" class="form-label">Full Name Designation</label>
+            <input type="text" id="signupName" class="form-input" required placeholder="Agent Identity">
+          </div>
+          
+          <div class="form-group">
+            <label for="signupEmail" class="form-label">Email Node Index</label>
+            <input type="email" id="signupEmail" class="form-input" required placeholder="name@domain.com">
+          </div>
+
+          <div class="form-group">
+            <label for="signupPassword" class="form-label">Security Passkey (Min 6 chars)</label>
+            <input type="password" id="signupPassword" class="form-input" required placeholder="••••••••" minlength="6">
+          </div>
+
+          <div class="form-group">
+            <label for="signupConfirm" class="form-label">Confirm Security Passkey</label>
+            <input type="password" id="signupConfirm" class="form-input" required placeholder="••••••••" minlength="6">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" style="width: 100%; margin-top: 1.5rem; font-size: 0.95rem;">
+          Compile Credentials & Join
+        </button>
+      </form>
+
+      <div style="margin-top: 1.5rem; text-align: center; font-size: 0.85rem; color: var(--blue-grey);">
+        Already registered in data blocks? <a href="login.html" style="color: var(--accent); text-decoration: none; font-weight: bold;">Log In</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="global-footer" style="padding: 1.5rem 0; margin-top: auto; border-top: 1px solid var(--border-color);">
+    <div class="container" style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--blue-grey); flex-wrap: wrap; gap: 1rem;">
+      <span>© 2026 KRAFT LABS INC.</span>
+      <span>BUILD: v1.0.4-FC</span>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    function processSignup(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('signupName').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const pass = document.getElementById('signupPassword').value;
+      const confirmPass = document.getElementById('signupConfirm').value;
+      const errorAlert = document.getElementById('signupErrorAlert');
+
+      // Validation
+      if (pass !== confirmPass) {
+        showError("Security passkeys do not match.");
+        return;
+      }
+
+      // Check if email already registered
+      let users = JSON.parse(localStorage.getItem('kraft_users')) || [];
+      const userExists = users.some(u => u.email.toLowerCase() === email.toLowerCase());
+
+      if (userExists) {
+        showError("This email index is already registered to a workspace agent.");
+        return;
+      }
+
+      // Save user
+      const newUser = {
+        name: name,
+        email: email,
+        password: pass
+      };
+
+      users.push(newUser);
+      localStorage.setItem('kraft_users', JSON.stringify(users));
+
+      // Auto login
+      sessionStorage.setItem('kraft_active_user', JSON.stringify({
+        name: name,
+        email: email
+      }));
+
+      alert("Agent profile successfully enrolled. Initiating redirect...");
+      window.location.href = 'index.html';
+    }
+
+    function showError(msg) {
+      const errorAlert = document.getElementById('signupErrorAlert');
+      errorAlert.textContent = `ValidationError: ${msg}`;
+      errorAlert.style.display = 'block';
+      setTimeout(() => {
+        errorAlert.style.display = 'none';
+      }, 5000);
+    }
+  </script>
+</body>
+</html>

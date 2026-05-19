@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KRAFT // About the Studio</title>
+  <meta name="description" content="Learn about KRAFT Labs' design philosophy, material guidelines, and workspace aesthetics.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <!-- Global Header Nav -->
+  <header class="global-header" id="globalHeader">
+    <div class="container header-container">
+      <div class="logo-container">
+        <a href="index.html">
+          <span>KRAFT</span><span class="logo-dot"></span>
+        </a>
+      </div>
+      
+      <nav class="desktop-nav">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Catalog</a>
+        <a href="about.html" class="active">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="../admin/dashboard.html">Admin Terminal</a>
+      </nav>
+      
+      <div class="header-actions">
+        <a href="login.html" class="action-btn" aria-label="Account Login" style="display: flex; align-items: center; justify-content: center; color: inherit; text-decoration: none;" id="navUserIcon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </a>
+        <button class="action-btn cart-btn" aria-label="Open Cart" id="cartBtn" onclick="openCartDrawer()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+          <span class="cart-badge" style="display: none;">0</span>
+        </button>
+        <button class="action-btn menu-toggle" aria-label="Toggle Menu" id="menuToggle" onclick="toggleMobileMenu()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <a href="index.html" onclick="toggleMobileMenu()">Home</a>
+    <a href="shop.html" onclick="toggleMobileMenu()">Catalog</a>
+    <a href="about.html" onclick="toggleMobileMenu()">About</a>
+    <a href="contact.html" onclick="toggleMobileMenu()">Contact</a>
+    <a href="../admin/dashboard.html" onclick="toggleMobileMenu()">Admin Terminal</a>
+    <a href="login.html" onclick="toggleMobileMenu()" style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">Agent Portal</a>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero-section" style="background-image: url('../images/hero_bg.png'); min-height: 50vh;">
+    <div class="hero-overlay"></div>
+    <div class="container hero-container" style="justify-content: center; text-align: center;">
+      <div>
+        <span class="technical-spec" style="color: var(--accent); margin-bottom: 1rem; display: block; font-size: 1rem; font-weight: 700;">MANIFESTO // STUDIO KRAFT</span>
+        <h1 class="hero-title" style="font-size: clamp(2.5rem, 5vw, 4.5rem);">Hardware for High Agency Workspaces</h1>
+      </div>
+    </div>
+  </section>
+
+  <!-- Editorial Info Block -->
+  <section class="container" style="padding: 5rem 0;">
+    <div class="grid-section" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 4rem; align-items: start;">
+      <div>
+        <span class="technical-spec" style="color: var(--accent); display: block; margin-bottom: 1rem;">00 // ESTABLISHED 2026</span>
+        <h2 style="font-family: var(--font-display); font-size: 2.2rem; line-height: 1.2; margin-bottom: 1.5rem;">Form follows function, elevated to a science.</h2>
+      </div>
+      <div style="font-size: 1.15rem; line-height: 1.7; color: var(--dark-grey); display: flex; flex-direction: column; gap: 1.5rem;">
+        <p>KRAFT was founded by a collective of industrial designers, digital architects, and electrical engineers with a simple thesis: the tools of digital agency should match the fidelity of the minds operating them.</p>
+        <p>We reject disposable plastic enclosures and planned obsolescence. Every node leaving our assembly is carved from structural solid-block aluminum, cast in high-density aggregate concrete, or fused with authentic vacuum indicators. The result is desktop hardware that anchors your physical workspace with tactile permanency.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Studio Core Values Grid -->
+  <section style="background-color: var(--platinum); padding: 5rem 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+      <span class="technical-spec" style="color: var(--accent); display: block; margin-bottom: 3rem; text-align: center;">METRIC // CORE COMPILING VALUES</span>
+      
+      <div class="grid-section" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+        <div class="product-card" style="padding: 2.5rem; background: var(--white); box-shadow: none;">
+          <div class="technical-spec" style="color: var(--accent); font-size: 1.5rem; margin-bottom: 1.5rem; font-weight: bold;">01</div>
+          <h3 style="font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 1rem; text-transform: uppercase;">Structural Permanence</h3>
+          <p style="color: var(--dark-grey); line-height: 1.5; font-size: 0.95rem;">Anodized aerospace alloys, raw tactile concrete bases, and mineral glass assemblies. We design for decadal durability and high structural mass.</p>
+        </div>
+
+        <div class="product-card" style="padding: 2.5rem; background: var(--white); box-shadow: none;">
+          <div class="technical-spec" style="color: var(--accent); font-size: 1.5rem; margin-bottom: 1.5rem; font-weight: bold;">02</div>
+          <h3 style="font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 1rem; text-transform: uppercase;">Transparent Aesthetics</h3>
+          <p style="color: var(--dark-grey); line-height: 1.5; font-size: 0.95rem;">Reveal the underlying engineering. Our products leverage sandblasted glass windows and crystalline polycarbonate shells to expose internal circuitry layouts.</p>
+        </div>
+
+        <div class="product-card" style="padding: 2.5rem; background: var(--white); box-shadow: none;">
+          <div class="technical-spec" style="color: var(--accent); font-size: 1.5rem; margin-bottom: 1.5rem; font-weight: bold;">03</div>
+          <h3 style="font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 1rem; text-transform: uppercase;">Tactile Feedback</h3>
+          <p style="color: var(--dark-grey); line-height: 1.5; font-size: 0.95rem;">Every scroll, click, and calibration dial dial-in uses custom physical detents, brass knobs, or heavy mechanical toggles to make interaction tactile.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Global Footer -->
+  <footer class="global-footer" id="globalFooter">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-info">
+          <div class="footer-brand">
+            <span>KRAFT</span><span class="logo-dot"></span>
+          </div>
+          <p class="footer-desc">Crafting the future of desktop agency, physical computing, and industrial workstation nodes.</p>
+        </div>
+        <div>
+          <h4 class="footer-column-title">Devices</h4>
+          <ul class="footer-links">
+            <li><a href="product.html?id=grid-charger">Grid-01 Charger</a></li>
+            <li><a href="product.html?id=aether-lamp">Aether Light</a></li>
+            <li><a href="product.html?id=orbit-organizer">Orbit Organizer</a></li>
+            <li><a href="product.html?id=isotope-clock">Isotope Clock</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-column-title">Platform</h4>
+          <ul class="footer-links">
+            <li><a href="shop.html">Product Catalog</a></li>
+            <li><a href="../admin/dashboard.html">Admin Dashboard</a></li>
+            <li><a href="../legal/terms.html">Terms of Operation</a></li>
+            <li><a href="../legal/privacy.html">Privacy Encryption</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-column-title">Telemetry Alert</h4>
+          <p style="color: var(--blue-grey); font-size: 0.9rem; margin-bottom: 1rem;">Subscribe to hardware updates and batch release protocols.</p>
+          <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Subscribed to Hardware Broadcasts.')">
+            <input type="email" placeholder="email@domain.com" class="newsletter-input" required aria-label="Email Address">
+            <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Join</button>
+          </form>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <span>© 2026 KRAFT LABS INC. ALL METRICS RESOLVED.</span>
+        <span>BUILD: v1.0.4-FC</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Global Cart Drawer Overlay -->
+  <div class="cart-drawer-overlay" id="cartDrawerOverlay" onclick="closeCartDrawer()"></div>
+  
+  <!-- Global Cart Drawer -->
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h3 class="cart-title">Accessory Storage</h3>
+      <button class="close-cart-btn" onclick="closeCartDrawer()">✕</button>
+    </div>
+    
+    <div class="cart-items-list"></div>
+    
+    <div class="cart-summary">
+      <div class="summary-row">
+        <span class="summary-label">Subtotal</span>
+        <span class="summary-value" id="cartSubtotal">₹0</span>
+      </div>
+      <div class="summary-row summary-total">
+        <span class="summary-label">Total</span>
+        <span class="summary-value" id="cartTotal">₹0</span>
+      </div>
+      
+      <a href="checkout.html" class="btn btn-primary btn-block" id="cartCheckoutBtn" style="margin-top: 1.5rem; display: flex; width: 100%;">
+        Proceed to Check-Out
+      </a>
+    </div>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    // Update active state in nav based on login session
+    document.addEventListener('DOMContentLoaded', () => {
+      const activeUser = JSON.parse(sessionStorage.getItem('kraft_active_user'));
+      if (activeUser) {
+        const userIcon = document.getElementById('navUserIcon');
+        if (userIcon) {
+          userIcon.innerHTML = `<span style="font-family: var(--font-mono); font-size: 0.75rem; border: 1px solid var(--accent); padding: 0.25rem 0.5rem; border-radius: 4px; color: var(--accent); font-weight: bold;">AG-${activeUser.name.slice(0,3).toUpperCase()}</span>`;
+          userIcon.setAttribute('href', '#');
+          userIcon.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm("Disconnect active session node?")) {
+              sessionStorage.removeItem('kraft_active_user');
+              window.location.reload();
+            }
+          });
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KRAFT // Purchase Successful</title>
+  <meta name="description" content="Order confirmation from KRAFT Labs.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <!-- Global Header Nav -->
+  <header class="global-header" id="globalHeader">
+    <div class="container header-container">
+      <div class="logo-container">
+        <a href="index.html">
+          <span>KRAFT</span><span class="logo-dot"></span>
+        </a>
+      </div>
+      
+      <nav class="desktop-nav">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Catalog</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="../admin/dashboard.html">Admin Terminal</a>
+      </nav>
+      
+      <div class="header-actions">
+        <a href="login.html" class="action-btn" aria-label="Account Login" style="display: flex; align-items: center; justify-content: center; color: inherit; text-decoration: none;" id="navUserIcon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </a>
+        <button class="action-btn cart-btn" aria-label="Open Cart" id="cartBtn" onclick="openCartDrawer()" style="opacity:0.3; pointer-events:none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+          <span class="cart-badge" style="display: none;">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Success Card Container -->
+  <main class="container">
+    <div class="success-card">
+      <div class="success-icon-wrap">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      
+      <h1 class="success-title">Order Authenticated</h1>
+      <p class="success-msg">Your transaction channel is resolved. The hardware build parameters are loaded to packaging nodes.</p>
+
+      <div class="success-details-box">
+        <div class="success-detail-row">
+          <span>Order ID Reference</span>
+          <span class="technical-value" id="successOrderId" style="color: var(--accent);">KT-XXXXXX</span>
+        </div>
+        <div class="success-detail-row">
+          <span>Customer Index</span>
+          <span id="successCustName">Agent</span>
+        </div>
+        <div class="success-detail-row">
+          <span>Total Authorized</span>
+          <span class="technical-value" id="successTotal">₹0</span>
+        </div>
+        <div class="success-detail-row">
+          <span>Telemetry Status</span>
+          <span class="status-badge status-pending">Pending Packaging</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1rem; justify-content: center;">
+        <a href="shop.html" class="btn btn-outline">Procure More Devices</a>
+        <a href="../admin/dashboard.html" class="btn btn-primary">Track Order in Admin</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="global-footer" id="globalFooter">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-info">
+          <div class="footer-brand">
+            <span>KRAFT</span><span class="logo-dot"></span>
+          </div>
+          <p class="footer-desc">Crafting the future of desktop agency, physical computing, and industrial workstation nodes.</p>
+        </div>
+        <div>
+          <h4 class="footer-column-title">Devices</h4>
+          <ul class="footer-links">
+            <li><a href="product.html?id=grid-charger">Grid-01 Charger</a></li>
+            <li><a href="product.html?id=aether-lamp">Aether Light</a></li>
+            <li><a href="product.html?id=orbit-organizer">Orbit Organizer</a></li>
+            <li><a href="product.html?id=isotope-clock">Isotope Clock</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-column-title">Platform</h4>
+          <ul class="footer-links">
+            <li><a href="shop.html">Product Catalog</a></li>
+            <li><a href="../admin/dashboard.html">Admin Dashboard</a></li>
+            <li><a href="../legal/terms.html">Terms of Operation</a></li>
+            <li><a href="../legal/privacy.html">Privacy Encryption</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-column-title">Telemetry Alert</h4>
+          <p style="color: var(--blue-grey); font-size: 0.9rem; margin-bottom: 1rem;">Subscribe to hardware updates and batch release protocols.</p>
+          <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Subscribed to Hardware Broadcasts.')">
+            <input type="email" placeholder="email@domain.com" class="newsletter-input" required aria-label="Email Address">
+            <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Join</button>
+          </form>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <span>© 2026 KRAFT LABS INC. ALL METRICS RESOLVED.</span>
+        <span>BUILD: v1.0.4-FC</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    // Success parameter parsing
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const orderId = urlParams.get('orderId') || 'KT-000000';
+      const name = urlParams.get('name') || 'Guest Customer';
+      const total = urlParams.get('total') || '0';
+
+      document.getElementById('successOrderId').textContent = orderId;
+      document.getElementById('successCustName').textContent = name;
+      document.getElementById('successTotal').textContent = formatCurrency(parseFloat(total));
+    });
+  </script>
+</body>
+</html>
